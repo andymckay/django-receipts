@@ -46,13 +46,13 @@ Add in django-receipts into your urls, for example::
 
 You will then be able to do a POST to::
 
-       curl -X POST http://localhost:1234/receiive --data "bogus.receipt"
+       curl -X POST http://localhost:1234/receiive --data "good.receipt"
 
 This will return::
 
-       {"status": "error"}
+       {"status": "ok"}
 
-Since it cannot parse this receipt.
+See `django_receipts\constants.py` for more.
 
 Configuration
 =============

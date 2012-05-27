@@ -7,14 +7,12 @@ from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.timezone import now
 
-from django_receipts import constants
 from django_receipts.models import Receipt
 from django_receipts.tasks import check
 
 import logging
 
 log = logging.getLogger(__name__)
-
 CHECK_INTERVAL = getattr(settings, 'RECEIPT_CHECK_INTERVAL', 60 * 60)
 
 
@@ -32,12 +30,14 @@ def receive(request):
         return http.HttpResponseBadRequest()
 
     hash_ = hashlib.md5(receipt).hexdigest()
-    obj, created = Receipt.objects.get_or_create(hash=hash_)
     log.info('Receipt received: %s, %s' % (hash_, request.META['REMOTE_ADDR']))
 
-    if (not obj.checked or
-       ((obj.checked + timedelta(seconds=CHECK_INTERVAL)) < now())):
-        result = constants.VALID_INVERTED[check(obj, receipt)]
+    obj, created = Receipt.objects.get_or_create(hash=hash_)
+    expired = (not obj.checked or
+               (obj.checked + timedelta(seconds=CHECK_INTERVAL)) < now())
+
+    if obj.allow and expired:
+        result = check(obj, receipt)
     else:
         result = obj.get_status()
 

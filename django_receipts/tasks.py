@@ -1,10 +1,8 @@
 from datetime import datetime
 import logging
 
-from jwt import DecodeError
-from receipts.receipts import Receipt, VerificationError
+from receipts.receipts import Receipt
 from django_receipts import constants
-from django_receipts.models import Receipt as ReceiptModel
 
 log = logging.getLogger(__name__)
 
@@ -21,12 +19,11 @@ def check(model, data):
     log.info('Checking receipt: %s' % model.pk)
     try:
         result = receipt.verify_server()['status']
-    except (VerificationError, TypeError, DecodeError):
+    except:
         log.error('There was an error with the verification.', exc_info=True)
-        status = constants.VALID_LOOKUP['error']
-    else:
-        status = constants.VALID_LOOKUP.get(result)
+        result = 'error'
 
+    status = constants.VALID_LOOKUP[result]
     model.valid = status
     model.save()
-    return status
+    return constants.VALID_INVERTED[status]
