@@ -15,4 +15,3 @@ VALID_LOOKUP = {
 }
 
 VALID_INVERTED = dict([(v, k) for k, v in VALID_LOOKUP.iteritems()])
-VALID = [(k, v) for k, v in VALID_LOOKUP.iteritems()]
