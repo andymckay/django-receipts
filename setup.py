@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='django-receipts',
-    version='0.1',
+    version='0.1.1',
     description='Django app for verifying web app receipts',
     long_description=open('README.rst').read(),
     author='Andy McKay',
