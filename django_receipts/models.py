@@ -6,10 +6,10 @@ from django_receipts import constants
 class Receipt(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     checked = models.DateTimeField(default=None, blank=True, null=True)
-    hash = models.CharField(max_length=255, unique=True)
+    hash = models.CharField(max_length=255, unique=True, db_index=True)
     valid = models.IntegerField(choices=constants.VALID_INVERTED.items(),
-                                default=constants.UNCHECKED)
-    allow = models.BooleanField(default=True)
+                                default=constants.UNCHECKED, db_index=True)
+    allow = models.BooleanField(default=True, db_index=True)
 
     class Meta:
         ordering = ('-created',)
