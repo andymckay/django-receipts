@@ -41,5 +41,8 @@ def receive(request):
     else:
         result = obj.get_status()
 
-    return http.HttpResponse(json.dumps({'status': result}),
-                             content_type='application/json')
+    response = http.HttpResponse(json.dumps({'status': result}),
+                                 content_type='application/json')
+    response['Access-Control-Allow-Origin'] = '*'
+    response['Access-Control-Allow-Methods'] = 'POST'
+    return response
